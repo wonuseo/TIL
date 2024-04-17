@@ -2,6 +2,9 @@
 tags:  
   - DB  
   - FTS  
+  - MariaDB
+  - LIKE
+  - INDEX
 ---
 #TIL   
 # 개요  
@@ -27,24 +30,40 @@ tags:
     * 검색 결과의 관련성을 평가하고 있는 순위를 매기는 과정.  
     * 키워드의 빈도, 위치, 문서의 신선도, 사용자의 행동 등 다양한 요인을 고려.  
     ***  
-# MariaDB  
-Ref : [MariaDB Full-Text Index Overview](https://mariadb.com/kb/en/full-text-index-overview/#in-natural-language-mode)  
-## 주요 내용  
-* **구문**  
-    * ==MATCH (col1,col2,...) AGAINST (expr [search_modifier])==  
+# MariaDB
+## 사용 방법 
+Ref:   
+[MariaDB Full-Text Index Overview](https://mariadb.com/kb/en/full-text-index-overview/#in-natural-language-mode)   
+* **구문**
+    * **MATCH (col1,col2,...) AGAINST (expr [search_modifier])**
     * search_modifier  
        * **IN NATURAL LANGUAGE MODE**  
           * 키워드 생략 가능.  
           * 관련성이 높은 순서대로 반환.  
           ***  
        * **IN BOOLEAN MODE**  
-          * 특수 연산자로 검색 옵션 부여.  
-             * ' +, -, <, >, (), ~, " ", * '  
-          * 검색어는 관련성 순으로 반화되지 않고 50% 제한도 적용되지 않는다.  
+          * 특수 연산자로 검색 옵션 부여.
+             * ' + ' : 반환된 모든 행에서 해당 단어는 필수.
+             * ' - ' : 해당 단어는 반환된 행에 나타날 수 없다.
+             * ' > ' : 가중치를 증가시킨다. 
+             * ' < ' : 가중치를 감소시킨다. ex) '<MySQL'
+             * ' ~ ' : 관련성에 부정적으로 기여.
+             * ' * ' : 와일드카드로, 단어의 끝에 작성.
+             * ' " ' : 큰따옴표로 묶인 내용은 전체로 간주. 
+          * 검색어는 관련성 순으로 반환되지 않고 50% 제한도 적용되지 않는다.  
           ***  
        * **WITH QUERY EXPANSION**  
           * 자연어 검색의 변형.  
           * 일반적인 자연어 검색을 수행하고, 검색에서 반환된 가장 관련성이 높은 행의 단어가 검색 문자열에 추가되고 검색이 다시 수행되어 두 번쨰 검색의 행을 반환.
+		  *** 
+* **매치율**
+	* **SELECT match( _col_ ) AGAINST ( _expr_ ) AS score,  FROM _Table_;**
+	* 단어의 수, 행의 고유 단어 수, 인덱스와 결과의 총 단어 수, 가중치 등 을 기반으로 관련성을 계산.
+	* 점수가 높을 수록 검색 결과와 일치도가 높다.
+	***
+# 관련 내용
+##### LIKE 연산자와 와일드 카드
+==LIKE Keyword%== 와 같이 와일드 카드가 문자열의 시작에 사용되지 않은 경우, 실행 계획을 살펴보면 인덱스 검색을 수행할 수 있다. 하지만 ==LIKE %Keyword%== 및 ==LIKE %Keyword== 와 같이 와일드 카드가 문자열의 시작에 존재하는 경우 일반적으로 인덱스를 사용할 수 없어 **전체 테이블 또는 전체 인덱스 스캔이 발생할 수 있다.**  
 
-
-
+이는 대부분의 관계형 데이터베이스에서 사용 되는 _B-tree_ 인덱스가 데이터를 키 값의 앞부분부터 사전식으로 정렬하여 저장하기 때문에, 와일드 카드가 문자열의 시작에 위치하면 시작 지점을 결정할 수 없어 모든 데이터를 확인해야 하기 때문이다.  
+***
