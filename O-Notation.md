@@ -55,6 +55,6 @@ $$n \geq n_0\ 에\ 대해 \ \ \vert\ f(n)\ \vert \leq C * \vert\ g(n)\ \vert$$
 ![[Big-O Complexity Chart.png]]
 * $n! > 2^n > n^2 > n\ log\ n > n > log\ n > 1$
 ***
-
-Ref:  
-[빅오 표기법을 설명하다. 시간과 공간의 복잡도](https://www.freecodecamp.org/korean/news/big-o-notation-why-it-matters-and-why-it-doesnt-1674cfa8a23c/)
+# Ref:  
+[빅오 표기법을 설명하다. 시간과 공간의 복잡도](https://www.freecodecamp.org/korean/news/big-o-notation-why-it-matters-and-why-it-doesnt-1674cfa8a23c/)   
+[bigocheatsheet](https://www.bigocheatsheet.com/)
