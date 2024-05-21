@@ -116,7 +116,81 @@ public class LinearComplexity {
 ```
 `printArrayElementsTwice` 는 배열 출력 반복문에 상수가 선언되어 있어 $O(2n)$ 일 것 같지만, 빅 오 표기법에서는 상수 계수를 생략한다. 이는 알고리즘의 성능을 입력 크기가 매우 큰경우에 초점을 맞추기 때문이다. 
 입력이 아주 큰 값일 때, $2n$ 과 $n$ 의 차이는 상대적으로 중요하지 않게된다.
+## $O(n\ log\ n)$
+![[O(n log n) Graph]]
+>$O(n\ log\ n)$ 은 로그 선형 복잡도 (log-linear complexity) 라고 부르며, 입력값이 중가함에 따라 시간 복잡도가 입력값과, 로그 값인 $log\ n$ 의 곱에 비례하여 증가하는 것을 의미한다.  
+>$O(n)$ 보다 느리게 증가하지만, 입력 값이 커질수록 둘 사이의 차이가 점점 커진다.
+#### 예제: 병합 정렬
+```java
+public class MergeSort {  
 
+    private static void merge(
+	    int[] array
+	    , int[] temp
+	    , int leftStart
+	    , int rightEnd
+    ) {  
+        int leftEnd = (leftStart + rightEnd) / 2;  
+        int rightStart = leftEnd + 1;  
+        int size = rightEnd - leftStart + 1;  
+  
+        int left = leftStart;  
+        int right = rightStart;  
+        int index = leftStart;  
+  
+        while (left <= leftEnd && right <= rightEnd) {  
+            if (array[left] <= array[right]) {  
+                temp[index] = array[left];  
+                left++;  
+            } else {  
+                temp[index] = array[right];  
+                right++;  
+            }  
+            index++;  
+        }  
+ 
+        System.arraycopy(array, left, temp, index, leftEnd - left + 1);  
+        System.arraycopy(array, right, temp, index, rightEnd - right + 1);  
+        System.arraycopy(temp, leftStart, array, leftStart, size);  
+    }  
+    
+    private static void mergeSort(
+	    int[] array
+	    , int[] temp
+	    , int leftStart
+	    , int rightEnd
+    ) {  
+        if (leftStart >= rightEnd) {  
+            return;  
+        }  
+  
+        int middle = (leftStart + rightEnd) / 2;  
+        mergeSort(array, temp, leftStart, middle);  
+        mergeSort(array, temp, middle + 1, rightEnd);  
+        merge(array, temp, leftStart, rightEnd);  
+    }  
+  
+    public static void sort(int[] array) {  
+        int[] temp = new int[array.length];  
+        mergeSort(array, temp, 0, array.length - 1);  
+    }  
+  
+    public static void main(String[] args) {  
+        int[] array = {38, 27, 43, 3, 9, 82, 10};  
+        System.out.println("Unsorted array:");  
+        for (int num : array) {  
+            System.out.print(num + " ");  
+        }  
+  
+        sort(array);  
+  
+        System.out.println("\nSorted array:");  
+        for (int num : array) {  
+            System.out.print(num + " ");  
+        }  
+    }  
+}
+```
 ***
 # Linear DataStructure
 # NonLinear DataStructure
