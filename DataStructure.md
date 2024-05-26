@@ -1,13 +1,13 @@
 ---
 tags:  
-  - DataStructur
+  - DataStructure
   - TimeComplexity
   - SpaceComplexity
 ---
-#TIL 
+#TIL
 
 # 개요
-**데이터를 효율적으로 관리하고 접근할 수 있도록 조직화, 관리, 저장하는 방법을 말한다.**   
+**데이터를 효율적으로 관리하고 접근할 수 있도록 조직화, 관리, 저장하는 방법을 말한다.**
 
 이는 크게 데이터 요소들이 순차적으로 나열된 구조인 '선형 자료구조'와 데이터 요소들이 계층적 및 그래프 형태로 연결된 구조인 '비선형 자료구조'로 나뉜다. 효율성, 성능 등을 예측하여 적합한 자료구조를 선택하기 위해 복잡도 를 지표로 사용한다.
 
@@ -48,30 +48,30 @@ public class ConstantTimeExample {
 public class BinarySearch {
 
 	public static int binarySearch(int[] arr, int target) {
-		int low = 0; 
+		int low = 0;
 		int high = arr.length - 1;
-	
+
 		while (low <= high) {
 			int mid = low + (high - low) / 2;
-	
-			if (arr[mid] == target) {	
-				return mid; 
+
+			if (arr[mid] == target) {
+				return mid;
 			} else if (arr[mid] < target) {
-				low = mid + 1; 
+				low = mid + 1;
 			} else {
-				high = mid - 1; 
+				high = mid - 1;
 			}
 		}
 
 		return -1;
 	}
-	
+
 	public static void main(String[] args) {
-		int[] data = {1, 3, 5, 7, 9, 11, 13, 15, 17, 19};	
+		int[] data = {1, 3, 5, 7, 9, 11, 13, 15, 17, 19};
 		int target = 7;
-	
+
 		int result = binarySearch(data, target);
-	
+
 		if (result == -1) {
 			System.out.println(target + " is not in the array");
 		} else {
@@ -85,6 +85,10 @@ public class BinarySearch {
 		* `int low, high` 가 최대 값에 인접한 상태에서  `low + high`  를 수행한다면, 오버플로 발생.
 	2. 정확한 계산
 		* 현재 탐색 범위에서 중간 위치를 찾아, `low` 를 기준으로 하는 상태 값으로 계산.
+	3. 증명
+		* $low + {high\ -\ low \over 2}$
+		* ${2\ *\ low\ +\ high\ -\ low \over 2}$
+		* ${low\ +\ high \over 2}$
 
 이진 탐색의 기본 원리는 분할 정복 (Divide and Conquer) 전략에 기반을 두고 있어, 절반씩 범위를 줄여가면서 타겟을 찾는다.
 ## $O(n)$
@@ -114,7 +118,7 @@ public class LinearComplexity {
 	}
 }
 ```
-`printArrayElementsTwice` 는 배열 출력 반복문에 상수가 선언되어 있어 $O(2n)$ 일 것 같지만, 빅 오 표기법에서는 상수 계수를 생략한다. 이는 알고리즘의 성능을 입력 크기가 매우 큰경우에 초점을 맞추기 때문이다. 
+`printArrayElementsTwice` 는 배열 출력 반복문에 상수가 선언되어 있어 $O(2n)$ 일 것 같지만, 빅 오 표기법에서는 상수 계수를 생략한다. 이는 알고리즘의 성능을 입력 크기가 매우 큰경우에 초점을 맞추기 때문이다.
 입력이 아주 큰 값일 때, $2n$ 과 $n$ 의 차이는 상대적으로 중요하지 않게된다.
 ## $O(n\ log\ n)$
 ![[O(n log n) Graph]]
@@ -122,79 +126,164 @@ public class LinearComplexity {
 >$O(n)$ 보다 느리게 증가하지만, 입력 값이 커질수록 둘 사이의 차이가 점점 커진다.
 #### 예제: 병합 정렬
 ```java
-public class MergeSort {  
+public class MergeSort {
 
-    private static void merge(
-	    int[] array
-	    , int[] temp
-	    , int leftStart
-	    , int rightEnd
-    ) {  
-        int leftEnd = (leftStart + rightEnd) / 2;  
-        int rightStart = leftEnd + 1;  
-        int size = rightEnd - leftStart + 1;  
+	public static void merge(int[] array, int left, int mid, int right) {  
+    // 부분 배열의 크기 계산  
+    int n1 = mid - left + 1;  
+    int n2 = right - mid;  
   
-        int left = leftStart;  
-        int right = rightStart;  
-        int index = leftStart;  
+    // 임시 배열 생성  
+    int[] L = new int[n1];  
+    int[] R = new int[n2];  
   
-        while (left <= leftEnd && right <= rightEnd) {  
-            if (array[left] <= array[right]) {  
-                temp[index] = array[left];  
-                left++;  
-            } else {  
-                temp[index] = array[right];  
-                right++;  
-            }  
-            index++;  
+    // 데이터를 임시 배열에 복사  
+    for (int i = 0; i < n1; ++i)  
+        L[i] = array[left + i];  
+    for (int j = 0; j < n2; ++j)  
+        R[j] = array[mid + 1 + j];  
+  
+    // 임시 배열의 데이터를 병합하여 원래 배열에 저장  
+    int i = 0;  
+    int j = 0;  
+    int k = left;  
+    while (i < n1 && j < n2) {  
+        if (L[i] <= R[j]) {  
+            array[k] = L[i];  
+            
+            System.out.println(
+	            "Inserting " + L[i] + " from left array into position " + k
+	        );  
+            
+            i++;  
+        } else {  
+            array[k] = R[j];  
+            
+            System.out.println(
+	            "Inserting " + R[j] + " from right array into position " + k
+	        );
+	          
+            j++;  
         }  
- 
-        System.arraycopy(array, left, temp, index, leftEnd - left + 1);  
-        System.arraycopy(array, right, temp, index, rightEnd - right + 1);  
-        System.arraycopy(temp, leftStart, array, leftStart, size);  
-    }  
-    
-    private static void mergeSort(
-	    int[] array
-	    , int[] temp
-	    , int leftStart
-	    , int rightEnd
-    ) {  
-        if (leftStart >= rightEnd) {  
-            return;  
-        }  
-  
-        int middle = (leftStart + rightEnd) / 2;  
-        mergeSort(array, temp, leftStart, middle);  
-        mergeSort(array, temp, middle + 1, rightEnd);  
-        merge(array, temp, leftStart, rightEnd);  
+        k++;  
     }  
   
-    public static void sort(int[] array) {  
-        int[] temp = new int[array.length];  
-        mergeSort(array, temp, 0, array.length - 1);  
+    // L과 R에 남은 요소를 배열에 복사  
+    while (i < n1) {  
+        array[k] = L[i]; 
+         
+        System.out.println(
+	        "Inserting remaining " + L[i] + " from left array into position " + k
+	    );
+	      
+        i++;  
+        k++;  
     }  
-  
-    public static void main(String[] args) {  
-        int[] array = {38, 27, 43, 3, 9, 82, 10};  
-        System.out.println("Unsorted array:");  
-        for (int num : array) {  
-            System.out.print(num + " ");  
-        }  
-  
-        sort(array);  
-  
-        System.out.println("\nSorted array:");  
-        for (int num : array) {  
-            System.out.print(num + " ");  
-        }  
+    while (j < n2) {  
+        array[k] = R[j];  
+        
+        System.out.println(
+	        "Inserting remaining " + R[j] + " from right array into position " + k
+	    );  
+	        
+        j++;  
+        k++;  
     }  
 }
+
+	public static void sort(int[] array, int left, int right) {
+
+		System.out.println(
+			"Divide: " + 
+			Arrays.toString(
+					Arrays.copyOfRange(array, left, right + 1)
+			)
+		);
+
+		if (left < right) {
+			int mid = (left + right) / 2;
+
+			// 각 부분을 재귀적으로 정렬
+			sort(array, left, mid);
+			sort(array, mid + 1, right);
+
+			// 정렬된 두 부분을 합침
+			merge(array, left, mid, right);
+		}
+	}
+
+	public static void main(String[] args) {
+		int[] array = {38, 27, 43, 3, 9, 82, 10};
+		sort(array, 0, array.length - 1);
+
+		for (int i = 0; i < array.length; i++) {
+			System.out.print(array[i] + " ");
+		}
+	}
+}
+```
+
+```text
+Divide: [38, 27, 43, 3, 9, 82, 10]
+Divide: [38, 27, 43, 3]
+Divide: [38, 27]
+Divide: [38]
+Divide: [27]
+Inserting 27 from right array into position 0
+Inserting remaining 38 from left array into position 1
+Divide: [43, 3]
+Divide: [43]
+Divide: [3]
+Inserting 3 from right array into position 2
+Inserting remaining 43 from left array into position 3
+Inserting 3 from right array into position 0
+Inserting 27 from left array into position 1
+Inserting 38 from left array into position 2
+Inserting remaining 43 from right array into position 3
+Divide: [9, 82, 10]
+Divide: [9, 82]
+Divide: [9]
+Divide: [82]
+Inserting 9 from left array into position 4
+Inserting remaining 82 from right array into position 5
+Divide: [10]
+Inserting 9 from left array into position 4
+Inserting 10 from right array into position 5
+Inserting remaining 82 from left array into position 6
+Inserting 3 from left array into position 0
+Inserting 9 from right array into position 1
+Inserting 10 from right array into position 2
+Inserting 27 from left array into position 3
+Inserting 38 from left array into position 4
+Inserting 43 from left array into position 5
+Inserting remaining 82 from right array into position 6
+```
+
+```text
+[38, 27, 43, 3, 9, 82, 10] 
+├── [38, 27, 43, 3]
+│   ├── [38, 27]
+│   │   ├── [38]  ── [38]
+│   │   └── [27]  ── [27]
+│   │       └─> [27, 38]  <- 병합 결과
+│   └── [43, 3]
+│       ├── [43]  ── [43]
+│       └── [3]   ── [3]
+│           └─> [3, 43]   <- 병합 결과
+│       └─> [3, 27, 38, 43]  <- 최종 병합 결과
+└── [9, 82, 10]
+    ├── [9]  ── [9]
+    └── [82, 10]
+        ├── [82]  ── [82]
+        └── [10]  ── [10]
+            └─> [10, 82]   <- 병합 결과
+    └─> [9, 10, 82]  <- 최종 병합 결과
+└─> [3, 9, 10, 27, 38, 43, 82]  <- 전체 배열의 최종 병합 결과
 ```
 ***
 # Linear DataStructure
 # NonLinear DataStructure
 ***
-# Ref:  
-[bigocheatsheet](https://www.bigocheatsheet.com/)   
-[HANAMON [알고리즘] Time Complexity (시간복잡도)](https://hanamon.kr/%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-time-complexity-%EC%8B%9C%EA%B0%84-%EB%B3%B5%EC%9E%A1%EB%8F%84/)
+# Ref:
+[big-O cheatsheet](https://www.bigocheatsheet.com/)   
+[HAMMOND [알고리즘] Time Complexity (시간복잡도)](https://hanamon.kr/%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-time-complexity-%EC%8B%9C%EA%B0%84-%EB%B3%B5%EC%9E%A1%EB%8F%84/)
