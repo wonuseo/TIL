@@ -128,7 +128,8 @@ public class LinearComplexity {
 ```java
 public class MergeSort {
 
-	public static void merge(int[] array, int left, int mid, int right) {  
+	public static void merge(int[] array, int left, int mid, int right) { 
+        
     // 부분 배열의 크기 계산  
     int n1 = mid - left + 1;  
     int n2 = right - mid;  
@@ -138,10 +139,8 @@ public class MergeSort {
     int[] R = new int[n2];  
   
     // 데이터를 임시 배열에 복사  
-    for (int i = 0; i < n1; ++i)  
-        L[i] = array[left + i];  
-    for (int j = 0; j < n2; ++j)  
-        R[j] = array[mid + 1 + j];  
+	for (int i = 0; i < n1; ++i) L[i] = array[left + i];  
+	for (int j = 0; j < n2; ++j) R[j] = array[mid + 1 + j];
   
     // 임시 배열의 데이터를 병합하여 원래 배열에 저장  
     int i = 0;  
@@ -179,6 +178,7 @@ public class MergeSort {
         i++;  
         k++;  
     }  
+    
     while (j < n2) {  
         array[k] = R[j];  
         
@@ -207,7 +207,7 @@ public class MergeSort {
 			sort(array, left, mid);
 			sort(array, mid + 1, right);
 
-			// 정렬된 두 부분을 합침
+			// 정렬된 두 부분을 병합
 			merge(array, left, mid, right);
 		}
 	}
@@ -280,6 +280,8 @@ Inserting remaining 82 from right array into position 6
     └─> [9, 10, 82]  <- 최종 병합 결과
 └─> [3, 9, 10, 27, 38, 43, 82]  <- 전체 배열의 최종 병합 결과
 ```
+병합 정렬은 배열을 작은 하위 문제로 분할하고, 이 문제들을 개별적으로 해결한 뒤, 해결된 결과를 합쳐 전체 배열을 정렬하는 전략을 사용한다.  
+이 과정에서 깊이 우선 탐색(DFS) 방식이 적용되어, 배열을 분할할 때마다 $log\ n$ 의 깊이로 재귀 호출이 이뤄지고, 각 병합 과정에서는 전체 원소 수 $n$ 만큼의 시간이 소요된다.
 ***
 # Linear DataStructure
 # NonLinear DataStructure
