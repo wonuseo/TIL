@@ -49,17 +49,17 @@
 ### 2. 응집도
 > '응집된(cohesive)'이라는 단어가 SRP를 암시한다. 단일 액터를 책임지는 코드를 함께 묶어주는 힘이 바로 응집성이다.
 * 정리
-	* 응집도가 높다는 것은 모듈이 하나의 actor에 대해 칙임을 진다는 것을 의미한다.
+	* 응집도가 높다는 것은 모듈이 하나의 actor에 대해 책임을 진다는 것을 의미한다.
 		***
-	* 필요할 때 관련된 부분만을 집중적으로 수정할 수 있어 유지보수성의 증대.
+	* 필요할 때 관련된 부분만을 집중적으로 수정할 수 있어 유지보수성의 증대를 기대할 수 있다.
 ### 3. 위반
-##### 우발적 중복
+##### 3.1 우발적 중복
 ![[p.67 SRP - Problem01]]![[p.68 SRP - Problem01]]
 1. 개발자가 각기 다른 기능 세가지 메서드를 하나의 클래스 안에 배치하여, 액터가 서로 결합된 상황.
 2. 이 클래스에는 하나의 알고리즘을 공유하며, 서로 다른 액터를 책임지는 메서드가 a(), b()가 존재한다.
 3. 업무를 할당 받은 개발자는 b() 메서드를 수정해야 하지만, 알고리즘이 공유 되고 있는 a() 메서드에 대해 알지 못해 a() 메서드에도 수정 사항이 반영되어 문제가 발생.
 > ...서로 다른 액터가 의존하는 코드를 너무 가까이 배치했기 때문에 발생한다.
-##### 병합
+##### 3.2 병합
 1. 개발자가 a() 메서드의 수정과 동시에 DBA가  해당 테이블 스키마를 수정하기 위해 두 개발자가 하나의 클래스를 체크아웃 받은 후 변경사항을 적용.
 2. 변경 사항이 충돌해 병합이 발생.
 > 최근 도구는 굉장히 뛰어나지만, 어떤 도구도 병합이 발생하는 모든 경우를 해결할 수 없다. 결국 병합에는 항상 위험이 뒤따르게 된다.
@@ -87,10 +87,119 @@
 # OCP 
 **소프트웨어의 구성 요소는 확장에 열려 있어야 하지만, 변경에 닫혀 있어야 한다.**
 ### 1. 확장과 변경
-### 2. 의존성 체계화
-### 3. 컴포넌트의 계층구조
+> ... 다시 말해 소프트웨어 개체의 행위는 확장할 수 있어야 하지만, 이때 개체를 변경해서는 안 된다.
+> 소프트웨서 아키텍처를 공부하는 가장 근본적인 이유가 바로 이때문이다.   
+> ...  
+> 소프트웨어 설계를 공부하기 시작한 지 얼마 안된 사람들 대다수는 OCP를 클래스와 모듈을 설계할 때 도움되는 원칙이라고 알고 있다. 하지만 아키텍처 컴포넌트 수준에서 OCP를 고려할 때 훨씬 중요한 의미를 가진다.
+> ...  
+* 정리
+	* 확장에 열려 있어야 한다.
+		* 소프트웨어 구성 요소가 새로운 기능이나 요구 사항을 수용할 수 있도록 설계 되어야 한다.
+		***
+	* 변경에 닫혀 있어야 한다.
+		* 기존의 코드를 수정하지 않고, 확장을 수행할 수 있어야 함을 의미한다.
+		* 검증된 기존 코드를 변경함으로써 발생할 수 있는 위험을 최소화.
 
-### 4. 결론
+### 2. 의존성 체계화 와 컴포넌트의 계층구조
+> 서로 다른 목적으로 변경되는 요소를 적절하게 분리하고(단일 책임 원칙 SRP), 이들 요소 사이의 의존성을 체계화함으로써(의존성 역전 원칙 DIP) 변경량을 최소화할 수 있다.
+##### 2.1 사고 실험
+>단일 책임 원칙을 적용하면   
+>...  
+> 재무 데이터를 검사한 후 보고서용 데이터를 생성한 다음, 필요에 따라 두가지 보고서 생성 절차 중 하나를 거쳐 적절히 포매팅한다.  
+> 여기서 얻을 수 있는 가장 중요한 영감은 보고서 생성이 두 개의 책임으로 분리 된다는 사실이다.   
+> ...  
+> 이렇게 책임을 분리했다면, 두 책임 중 하나에서 변경이 발생하더라도 다른 하나는 변경되지 않도록 소스 코드 의존성도 확실히 조직화 해야한다. 또한, 새로 조직화한 구조에서는 행위가 확장될 때 변경이 발생하지 않음을 보장해야 한다.
+
+##### 2.2 처리 과정을 클래스 단위로 분할하고, 클래스는 컴포넌트 단위로 분리
+![[p.76 OCP - Solution]]
+* Database
+	* Financial Database
+	* Financial Data Mapper
+		* **Using**
+			* Financial Database
+			*  Financial entities
+		* **Implement**
+			* `<I>`Financial Data Gateway
+		***
+* Interactor
+	*  `<I>`Financial Report Requester
+	* Financial Report Generator
+		* **Using**
+			* Financial entities
+			* `<I>`Financial Data Gateway
+			* `<DS>`Financial Report Request
+			* `<DS>`Financial Report Response 
+		* **Implement**
+			* `<I>`Financial Report Requester
+	* Financial entities
+	* `<I>`Financial Data Gateway
+	* `<DS>`Financial Report Request
+	* `<DS>`Financial Report Response 
+		***
+* Controller
+	* Financial Report Controller
+		* **Using**
+			* `<I>`Financial Report Requester
+			* `<DS>`Financial Report Request
+			* `<DS>`Financial Report Response 
+	* `<I>`Financial Report Presenter
+		* **Using**
+			* `<DS>`Financial Report Response 
+		***
+* Presenter
+	* Screen
+		* Screen Presenter
+			* **Using**
+				* `<DS>`Screen View Model
+				* `<I>`Screen View
+			*  **Implement**
+				* `<I>`Financial Report Presenter
+		* `<DS>`Screen View Model
+		* `<I>`Screen View
+			* **Using**
+				* `<DS>`Screen View Model
+	* Print
+		* Print Presenter
+			*  **Using**
+				* `<DS>`Print View Model
+				* `<I>`Print View
+			* **Implement**
+				* `<I>`Financial Report Presenter
+		* `<DS>`Print View Model
+		* `<I>`Print View
+			* **Using**
+				*  `<DS>`Print View Model
+		***
+* View
+	* Web View
+		* **Implement**
+			* `<I>`Screen View
+	* PDF View
+		* **Implement**
+			* `<I>`Print View
+
+> 여기서 주목할 점은 모든 의존성이 소스 코드 의존성을 나타낸다는 사실이다.   
+> ...  
+> 또 다른 점은 이중선은 화살표와 오직 한 방향으로 만 교차한다는 사실이다.  
+> ...  
+> 모든 컴포넌트 관계는 단방향으로 이루어 진다는 뜻이다.  
+> ...  
+> A 컴포넌트에서 발생한 변경으로부텨 B 컴포넌트를 보호하려면 반드시 A 컴포넌트가  B 컴포넌트에 의존해야 한다. 이 예제의 경우 Presenter에서 발생한 변경으로 부터 Controller를 보호하고자 한다. 그리고 View에서 발생한 변경으로 부터 Presenter를 보호하고자 한다. Interactor는 다른 모든 것에서 발생한 변경으로 부터 보호 하고자 한다.   
+> ...  
+> Interactor가 이처럼 특별한 위치를 차지해야만 하는가? 그 이유는 바로 Interactor가 업무 규칙을 포함하기 때문이다.  
+> ...  
+> 보호의 계층구조가 수준(level) 이라는 개념을 바탕으로 어떻게 생성되는지 주목하자.
+* 정리
+	* 단방향 의존성
+		* 소프트웨어 구성 요소 간의 의존성은 단방향으로 이루어져야 한다. 그 이유는 컴포넌트 간 결합도를 낮추고 각 컴포넌트의 변경이 다른 컴포넌트에 미치는 영향을 최소화하기 위함이다.
+		***
+	* 특정 수준 기반의 계층화
+		* 시스템 내에서 각 계층은 특정 수준을 기반으로 조직화되어 구성 요소들을 체계적으로 관리하고, 각 계층의 독립성을 보장한다.
+		* 높은 수준의 계층으로 갈수록, 보호받는 수준이 높아져, 핵심 비즈니스 로직이나 데이터 관리와 같은 중요한 기능이 외부의 변화로부터 격리할 수 있다.
+### 3. 결론
+> OCP는 시스템의 아키텍처를 떠받치는 원동력 중 하나다. OCP의 목표는 시스템을 확장하기 쉬운 동시에 변경으로 인해 시스템이 너무 많은 영향을 받지 않도록 하는데 있다.  
+> ...  
+> 시스템을 컴포넌트 단위로 분리하고, 저수준 컴포넌트에서 발생한 변경으로부터 고수준 컴포넌트를 보호할 수 있는 형태의 의존성 계층구조가 만들어지도록 해야 한다.
 ***
 # LSP
 **자식 클래스는 부모 클래스를 대체할 수 있어야 한다.**
