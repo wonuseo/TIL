@@ -1,7 +1,8 @@
 # TIL
-Today I Learned
+Document for Version Control of TIL Recorded in Obsidian
 ***
-[DataStructure](DataStructure.md)
+- [DataStructure](DataStructure.md)
 ***
-[Full-TextSearch](Full-TextSearch.md)
+- [Full-TextSearch](Full-TextSearch.md)
 ***
+- [SOLID](SOLID.md)
