@@ -283,6 +283,66 @@ Inserting remaining 82 from right array into position 6
 병합 정렬은 배열을 작은 하위 문제로 분할하고, 이 문제들을 개별적으로 해결한 뒤, 해결된 결과를 합쳐 전체 배열을 정렬하는 전략을 사용한다.  
 이 과정에서 깊이 우선 탐색(DFS) 방식이 적용되어, 배열을 분할할 때마다 $log\ n$ 의 깊이로 재귀 호출이 이뤄지고, 각 병합 과정에서는 전체 원소 수 $n$ 만큼의 시간이 소요된다.
 ***
+## $O(n^2)$
+![[O(n2) Graph]]
+> O(n2)은 2차 복잡도(quadratic complexity) 라고 부르며, 입력값이 증가함에 따라 시간이 n의 제곱수의 비율로 증가하는 것을 의미한다.
+#### 예제: 버블 정렬
+``` java
+public class BubbleSort {
+    public static void bubbleSort(int[] arr) {
+        int n = arr.length;
+        for (int i = 0; i < n-1; i++) {
+            for (int j = 0; j < n-i-1; j++) {
+                if (arr[j] > arr[j+1]) {
+                    int temp = arr[j];
+                    arr[j] = arr[j+1];
+                    arr[j+1] = temp;
+                }
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        int[] arr = {64, 34, 25, 12, 22, 11, 90};
+        bubbleSort(arr);
+        System.out.println("Sorted array:");
+        for (int i : arr) {
+            System.out.print(i + " ");
+        }
+    }
+}
+```
+#### 예제: 선택 정렬
+``` java
+public class SelectionSort {
+    public static void selectionSort(int[] arr) {
+        int n = arr.length;
+        for (int i = 0; i < n-1; i++) {
+            int minIndex = i;
+            for (int j = i+1; j < n; j++) {
+                if (arr[j] < arr[minIndex]) {
+                    minIndex = j;
+                }
+            }
+    
+            int temp = arr[minIndex];
+            arr[minIndex] = arr[i];
+            arr[i] = temp;
+        }
+    }
+
+    public static void main(String[] args) {
+        int[] arr = {64, 25, 12, 22, 11};
+        selectionSort(arr);
+        System.out.println("Sorted array:");
+        for (int i : arr) {
+            System.out.print(i + " ");
+        }
+    }
+}
+```
+
+***
 # Linear DataStructure
 # NonLinear DataStructure
 ***
