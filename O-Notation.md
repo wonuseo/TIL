@@ -51,9 +51,181 @@ $$n \geq n_0\ 에\ 대해 \ \ \vert\ f(n)\ \vert \leq C * \vert\ g(n)\ \vert$$
     $${g(n)-f(n)}\ =\ n^2-({n^2 \over 2}-{n \over 2})\ =\ {n^2 \over 2}+{n \over 2}$$
 ***
 # 전형적인 Big-O 복잡도 비교
-
+- $n! > 2^n > n^2 > n\ log\ n > n > log\ n > 1$
 ![[Big-O Complexity Chart.png]]
-* $n! > 2^n > n^2 > n\ log\ n > n > log\ n > 1$
+## $O(1)$ - 상수
+**입력 크기와 상관 없이 항상 일정한 시간이 소요된다. 즉, 작업 시간이 입력 크기에 독립적이다.**
+![[O(1) Graph]]
+``` java
+public class ConstantTime {
+    public static void main(String[] args) {
+        int n = 1000;
+        System.out.println("Hello, World!");
+    }
+}
+```
+## $O(log\ n)$ - 로그
+**입력 크기가 증가할 때, 실행 시간이 로그에 비례하여 증가한다.**
+![[O(log n) Graph]]
+``` java
+public class LogarithmicTime {
+    public static void main(String[] args) {
+        int n = 1000;
+        int count = 0;
+        for (int i = n; i > 1; i /= 2) {
+            count++;
+        }
+        System.out.println("Count: " + count);
+    }
+}
+```
+## $O(n)$ - 선형
+**입력 크기에 비례하여 실행 시간이 증가한다.**
+![[O(n) Graph]]
+``` java
+public class LinearTime {
+    public static void main(String[] args) {
+        int n = 1000;
+        for (int i = 0; i < n; i++) {
+            System.out.println("i: " + i);
+        }
+    }
+}
+```
+## $O(n\ log\ n)$ - 선형 로그
+**입력 크기가 증가할 때, 실행 시간이  $n \log n$ 에 비례하여 증가**
+![[O(n log n) Graph]]
+``` java
+public class MergeSortExample {
+    public static void main(String[] args) {
+        int[] arr = {5, 3, 8, 4, 2, 7, 1, 10};
+        mergeSort(arr, 0, arr.length - 1);
+        for (int num : arr) {
+            System.out.println(num);
+        }
+    }
+
+    public static void mergeSort(int[] arr, int left, int right) {
+        if (left < right) {
+            int mid = (left + right) / 2;
+            mergeSort(arr, left, mid);
+            mergeSort(arr, mid + 1, right);
+            merge(arr, left, mid, right);
+        }
+    }
+
+    public static void merge(int[] arr, int left, int mid, int right) {
+        int n1 = mid - left + 1;
+        int n2 = right - mid;
+
+        int[] leftArray = new int[n1];
+        int[] rightArray = new int[n2];
+
+        for (int i = 0; i < n1; i++) {
+            leftArray[i] = arr[left + i];
+        }
+        for (int j = 0; j < n2; j++) {
+            rightArray[j] = arr[mid + 1 + j];
+        }
+
+        int i = 0, j = 0;
+        int k = left;
+        while (i < n1 && j < n2) {
+            if (leftArray[i] <= rightArray[j]) {
+                arr[k] = leftArray[i];
+                i++;
+            } else {
+                arr[k] = rightArray[j];
+                j++;
+            }
+            k++;
+        }
+
+        while (i < n1) {
+            arr[k] = leftArray[i];
+            i++;
+            k++;
+        }
+
+        while (j < n2) {
+            arr[k] = rightArray[j];
+            j++;
+            k++;
+        }
+    }
+}
+```
+***
+## $O(n^2)$ 이차
+**입력 크기가 증가할 때, 실행 시간이  $n^2$ 에 비례하여 증가**
+![[O(n2) Graph]]
+``` java
+public class QuadraticTime {
+    public static void main(String[] args) {
+        int n = 100;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                System.out.println("i: " + i + ", j: " + j);
+            }
+        }
+    }
+}
+```
+***
+## $O(2^n)$ - 지수
+**입력 크기가 증가할 때, 실행 시간이  $2^n$ 에 비례하여 급격히 증가**
+![[O(2n) Graph]]
+``` java
+public class ExponentialTime {
+    public static void main(String[] args) {
+        int n = 20;
+        System.out.println("Fibonacci of " + n + " is " + fibonacci(n));
+    }
+
+    public static int fibonacci(int n) {
+        if (n <= 1) {
+            return n;
+        }
+        return fibonacci(n - 1) + fibonacci(n - 2);
+    }
+}
+```
+***
+## $O(n!)$ - 팩토리얼
+**입력 크기가 증가할 때, 실행 시간이  $n!$ 에 비례하여 매우 급격히 증가**
+![[O(factorial) Graph]]
+``` java
+public class FactorialTime {
+    public static void main(String[] args) {
+        int n = 10;
+        System.out.println("Permutations of " + n + " elements:");
+        permute(new int[n], 0);
+    }
+
+    public static void permute(int[] arr, int k) {
+        if (k == arr.length) {
+            for (int i : arr) {
+                System.out.print(i + " ");
+            }
+            System.out.println();
+        } else {
+            for (int i = 0; i < arr.length; i++) {
+                boolean found = false;
+                for (int j = 0; j < k; j++) {
+                    if (arr[j] == i) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    arr[k] = i;
+                    permute(arr, k + 1);
+                }
+            }
+        }
+    }
+}
+```
 ***
 # Ref:  
 [빅오 표기법을 설명하다. 시간과 공간의 복잡도](https://www.freecodecamp.org/korean/news/big-o-notation-why-it-matters-and-why-it-doesnt-1674cfa8a23c/)   
