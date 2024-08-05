@@ -24,6 +24,81 @@ tags:
 ***
 # Linear DataStructure
 ## Array
+**동일한 타입의 데이터가 연속적인 메모리 공간에 저장된 자료구조.**  
+
+각 요소는 인덱스를 통해 접근할 수 있으며, 인덱스는 0부터 시작한다. 선언 시 크기가 고정되어 크기를 변경할 수 없다.
+- 장점
+	- 임의의 위치에 있는 요소에 접근 시 $O(1)$ 시간 복잡도로 접근 가능.
+	- 연속된 메모리 공간을 사용하기 때문에 메모리 효율성이 높다.
+- 단점
+	- 배열의 크기는 선언 시 고정되어, 변경될 수 없다.
+	- 중간 요소에 삽입 또는 삭제 시, 나머지 요소를 이동 시켜야 해서 $O(n)$ 시간 이 소요된다.
+
+| Operation | Worst Case ($O$) | Best Case ($Ω$)  |
+| --------- | ---------------- | ---------------- |
+| Access    | $O(1)$           | $Ω(1)$           |
+| Search    | $O(n)$           | $Ω(1)$ : 첫번 째 요소 |
+| Insert    | $O(n)$ : 중간 삽입   | $Ω(1)$ : 끝 삽입    |
+| Delete    | $O(n)$ : 중간 삭제   | $Ω(1)$ : 끝 삭제    |
+``` java
+public class ArrayOperations {
+    public static void main(String[] args) {
+        
+        int[] numbers = {1, 2, 3, 4, 5};
+
+        // Access
+        System.out.println("Access element at index 2: " + numbers[2]);
+
+        // Search
+        int target = 3;
+        boolean found = false;
+        for (int i = 0; i < numbers.length; i++) {
+            if (numbers[i] == target) {
+                found = true;
+                System.out.println("Found target " + target + " at index " + i);
+                break;
+            }
+        }
+        if (!found) {
+            System.out.println("Target " + target + " not found");
+        }
+
+        // Insert
+        int[] newNumbers = new int[numbers.length + 1];
+        int insertIndex = 2;
+        int newValue = 99;
+        for (int i = 0, j = 0; i < newNumbers.length; i++) {
+            if (i == insertIndex) {
+                newNumbers[i] = newValue;
+            } else {
+                newNumbers[i] = numbers[j++];
+            }
+        }
+        System.out.print("Array after insertion: ");
+        for (int number : newNumbers) {
+            System.out.print(number + " ");
+        }
+        System.out.println();
+
+        // Delete
+        int deleteIndex = 2;
+        int[] numbersAfterDeletion = new int[numbers.length - 1];
+        for (int i = 0, j = 0; i < numbers.length; i++) {
+            if (i != deleteIndex) {
+                numbersAfterDeletion[j++] = numbers[i];
+            }
+        }
+        System.out.print("Array after deletion: ");
+        for (int number : numbersAfterDeletion) {
+            System.out.print(number + " ");
+        }
+    }
+}
+```
+
+
+
+
 ## Linked List
 ## Stack
 ## Queue
